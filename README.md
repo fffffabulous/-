@@ -5,4 +5,4 @@
 
 **手机端**
 
- <img src="https://github.com/fffffabulous/musicPlayer/blob/master/music.png" width = "400" height = "600" alt="播放器" align=center />
+ <img src="https://github.com/fffffabulous/musicPlayer/blob/master/music.png" width = "350" height = "560" alt="播放器" align=center />
