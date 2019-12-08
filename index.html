@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>MusicPlayer</title>
+        <link rel="stylesheet" href="http://at.alicdn.com/t/font_469002_y0vf7k2t058nnrk9.css">
+        <link rel="stylesheet" href="css/index.css">
+    </head>
+    <body>
+        <div class="class-div-main">
+        <div class="class-div-picture">
+            <div class="class-div-musicLyric">
+                <div class="class-div-lyricView">
+                    <ul class="class-ul-lyric">
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="class-div-musicplayer">
+            <audio src=""></audio>
+            <div class="class-div-musicInfo">
+                <p class="class-p-musicName"></p>
+                <p class="class-p-author"></p>
+            </div>
+        </div>
+        <div class="class-div-musicCurrentTime">
+            <span id="id-span-currentTime">00:00</span>/<span id="id-span-duration">00:00</span>
+        </div>
+        <span class="class-span-outProgressbar">
+            <span class="class-span-inProgressbar"></span>
+        </span>
+        <div class="class-div-soundControls">
+            <span class="iconfont icon-yinliang class-span-sound" data-state="open"></span>
+            <span class="class-span-outSoundbar">
+                <span class="class-span-inSoundbar" data-volume="1"></span>
+            </span>
+        </div>
+        <div class="class-div-controls">
+            <div class="class-div-playControls">
+                <span class="iconfont icon-bofang class-span-play"></span>
+                <span class="iconfont icon-xiayishou-copy class-span-next"></span>
+                <span class="iconfont icon-stop-xunhuan class-span-loop" data-state="close"></span>
+                <span class="iconfont icon-geci-copy class-span-lyrics"></span>
+            </div>
+        </div>
+        </div>
+        <script src="js/util.js"></script>
+        <script src="js/index.js"></script>
+    </body>
+</html>

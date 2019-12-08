@@ -1,0 +1,213 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+html, body {
+    height: 100%;
+    background-color: #d2d5d6;
+}
+
+span {
+    cursor: pointer;
+}
+
+.class-div-main {
+    width: 440px;
+    height: 530px;
+    margin: 0 auto;
+    background-color: #eef1f2;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 10px;
+    box-shadow: 0px 6px 7px #999;
+}
+
+.class-div-picture {
+    width: 100%;
+    height: 270px;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.class-div-musicLyric {
+    width: 100%;
+    height: 230px;
+    padding: 20px 0;
+    background-color: rgba(100, 100, 100, 0.5);
+}
+
+.class-div-lyricView {
+    display: none;
+    height: 230px;
+    overflow: hidden;
+}
+
+.class-ul-lyric {
+    position: relative;
+    transition: all 1s;
+}
+
+.class-ul-lyric li {
+    padding: 5px 0 2px 0;
+    position: relative;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    transition: all 1s;
+}
+
+.class-ul-lyric li.active {
+    font-size: 13px;
+    color: #ffffff;
+}
+
+.class-div-musicplayer {
+    height: 80px;
+    width: 400px;
+    padding: 20px 20px 0 20px;
+}
+
+.class-div-musicInfo {
+    display: inline-block;
+    width: 280px;
+}
+
+.class-div-musicInfo p {
+    cursor: default;
+}
+
+.class-p-musicName, .class-p-author {
+    font-weight: bold;
+    color: #455569;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.class-p-musicName {
+    font-size: 26px;
+}
+
+.class-p-author {
+    font-size: 18px;
+}
+
+.class-span-outProgressbar, .class-span-inProgressbar {
+    display: block;
+    border: none;
+    height: 6px;
+    border-radius: 2px;
+}
+
+.class-span-outProgressbar {
+    width: 400px;
+    margin: 0 auto 10px auto;
+    background-color: #414141;
+    position: relative;
+}
+
+.class-span-inProgressbar {
+    width: 0;
+    background-color: #cdd2d7;
+}
+
+.class-div-controls {
+    width: 400px;
+    height: 50px;
+    padding: 20px 20px;
+    margin-top: 25px;
+}
+
+.class-div-musicCurrentTime {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+#id-span-currentTime, #id-span-duration, .class-div-musicCurrentTime {
+    cursor: default;
+}
+
+.class-div-playControls {
+    position: relative;
+}
+
+.class-span-play, .class-span-next, .class-span-loop, .class-span-lyrics{
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    color: black;
+    font-size: 45px;
+    line-height: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.class-span-next {
+    left: 50px;
+}
+
+.class-span-loop {
+    right: 16px;
+    color: grey;
+}
+
+.class-span-lyrics {
+    right: 70px;
+    color: grey;
+}
+
+.class-span-loop-start {
+    color: black;
+}
+
+.class-span-outSoundbar, .class-span-inSoundbar {
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    height: 8px;
+    border-radius: 8px;
+}
+
+.class-div-soundControls {
+    margin-top: 15px;
+    margin-left: 20px;
+    position: relative;
+}
+
+.class-span-outSoundbar {
+    width: 80px;
+    background-color: #414141;
+    left: 20px;
+}
+
+.class-span-inSoundbar {
+    width: 80px;
+    background-color: #cdd2d7;
+}
+
+
+@media screen and (max-width: 500px) {
+    .class-div-main {
+        width: 100%;
+        /* height: 100% */
+    }
+    .class-div-controls {
+        width: 90%;
+    }
+    .class-span-outProgressbar {
+        width: 100%;
+    }
+    .class-div-musicplayer {
+        width: 80%;
+    }
+    .class-div-controls {
+        width: 90%;
+    }
+}
