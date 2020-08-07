@@ -33,12 +33,31 @@ const bindPlayButtonEvent = () => {
     })
 };
 
-const getRandomChannel = (response) => {
-    let channelArray = response.channels
+const checkAdult = (music) => {
+    return music.id
+}
+const next = (response) => {
+    let channelArray = response.result
     let randomChannel = Math.floor(Math.random() * channelArray.length)
     let item = channelArray[randomChannel]
+
+    let musicInfoDiv = e(".class-div-musicInfo")
+    musicInfoDiv.dataset.channelId = item.id
+}
+const getRandomChannel = (response) => {
+    //log('getRandomChannel', response)
+
+    let channelArray = response.result
+    let randomChannel = Math.floor(Math.random() * channelArray.length)
+    //log('randomChannel', randomChannel)
+    let item = channelArray[randomChannel]
+    log('getRandomChannel```````````````', item)
+
+
+    setMusicPlayerMes(item)
     let channelName = item.name
-    let channelId = item.channel_id
+    let channelId = item.id
+    log('channelName',channelName,'channelId',channelId)
     return {
         name: channelName,
         id: channelId,
@@ -49,10 +68,10 @@ const failToGetLyric = () => {
     let lyricUl = e(".class-ul-lyric")
     lyricUl.innerHTML = "<li>本歌曲展示没有歌词</li>"
 };
-const getLyric = (sid) => {
+const getLyric = (id) => {
     let newRequest = {
         method: "POST",
-        url: `http://api.jirengu.com/fm/getLyric.php?&sid=${sid}`,
+        url: `https://autumnfish.cn/lyric?id=${id}`,
         callback: (response) => {
             if (response !== "error") {
                 setLyric(response)
@@ -63,24 +82,41 @@ const getLyric = (sid) => {
     }
     ajax(newRequest)
 };
+//设置歌曲的URL
 const setMusicPlayer = (song) => {
-    let url = song.url
+    //log('setMusicPlayer',song)
+    let url = song[0].url
+    //log('url', url)
+    let audioPlayer = e("audio")
+    // let musicName = e(".class-p-musicName")
+    // let musicAuthor = e(".class-p-author")
+    // let musicDiv = e(".class-div-picture")
+    audioPlayer.src = url
+    // musicName.innerHTML = song.title
+    // musicAuthor.innerHTML = song.artist
+    // musicDiv.style.backgroundImage = `url(${song.picture})`
+    musicPlayEvent(audioPlayer)
+    getLyric(song[0].id)
+};
+//设置歌曲的信息
+const setMusicPlayerMes = (item) => {
+    //log('setMusicPlayerMes',item)
     let audioPlayer = e("audio")
     let musicName = e(".class-p-musicName")
     let musicAuthor = e(".class-p-author")
     let musicDiv = e(".class-div-picture")
-    audioPlayer.src = url
-    musicName.innerHTML = song.title
-    musicAuthor.innerHTML = song.artist
-    musicDiv.style.backgroundImage = `url(${song.picture})`
-    musicPlayEvent(audioPlayer)
-    getLyric(song.sid)
+    musicName.innerHTML = item.name
+    musicAuthor.innerHTML = item.song.artists[0].name
+    musicDiv.style.backgroundImage = `url(${item.picUrl})`
+    //getLyric(song.sid)
 };
 
 const setLyric = (response) => {
     removeAllChild(".class-ul-lyric")
-    let line = response.lyric.split("\n")
+    let line = response.lrc.lyric.split("\n")
+    //log('setLyric', line)
     let result = handleLyric(line)
+    log('result222222', result)
     renderLyric(result)
 
 };
@@ -148,10 +184,12 @@ const getChannelIdFromDataSet = () => {
 
 const requestMusic = (channelId) => {
     let musicRequest = {
-        url: `http://api.jirengu.com/fm/getSong.php?channel=${channelId}`,
+        url: `https://autumnfish.cn/song/url?id=${channelId}`,
         method: "GET",
         callback: (response) => {
-            let song = response.song[0]
+            //log('33333333', response)
+            let song = response.data
+            log('song', song)
             setMusicPlayer(song)
         }
     }
@@ -160,12 +198,15 @@ const requestMusic = (channelId) => {
 
 const getMusicSource = () => {
     let channelRequest = {
-        url: "http://api.jirengu.com/fm/getChannels.php",
+        url: `https://autumnfish.cn/personalized/newsong`,
         method: "GET",
         callback: (response) => {
+            //log('getMusicSource', response)
             let singleChannel = getRandomChannel(response)
-            let musicInfoDiv = e(".class-div-musicInfo")
-            musicInfoDiv.dataset.channelId = singleChannel.id
+            //log('singleChannel', singleChannel)
+            // let musicInfoDiv = e(".class-div-musicInfo")
+            // musicInfoDiv.dataset.channelId = singleChannel.id
+            next(response)
             requestMusic(singleChannel.id)
         }
     }
