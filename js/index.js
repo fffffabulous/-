@@ -2,6 +2,7 @@ const switchPlayButtonIcon = (isPlaying) => {
     let playButton = e(".class-span-play")
     let classList = playButton.classList
     if (isPlaying) {
+
         classList.add("icon-zanting")
         classList.remove("icon-bofang")
         return
@@ -33,47 +34,37 @@ const bindPlayButtonEvent = () => {
     })
 };
 
-const checkAdult = (music) => {
-    return music.id
-}
-const next = (response) => {
-    let channelArray = response.result
-    let randomChannel = Math.floor(Math.random() * channelArray.length)
-    let item = channelArray[randomChannel]
-
-    let musicInfoDiv = e(".class-div-musicInfo")
-    musicInfoDiv.dataset.channelId = item.id
-}
+//返回随机歌曲ID
 const getRandomChannel = (response) => {
-    //log('getRandomChannel', response)
-
-    let channelArray = response.result
-    let randomChannel = Math.floor(Math.random() * channelArray.length)
-    //log('randomChannel', randomChannel)
-    let item = channelArray[randomChannel]
-    log('getRandomChannel```````````````', item)
-
-
-    setMusicPlayerMes(item)
-    let channelName = item.name
-    let channelId = item.id
-    log('channelName',channelName,'channelId',channelId)
-    return {
-        name: channelName,
-        id: channelId,
+    let songArr = []
+    for (let i = 0; i < response.length; i++) {
+        let songID = response[i].id
+        //log('getRandomChannel', response[i].id)
+        songArr.push(songID)
+        // log('songArr', songArr)
     }
+    let randomChannel = Math.floor(Math.random() * songArr.length)
+    log('randomChannel', randomChannel)
+    let item = songArr[randomChannel]
+    log('item', item)
+    log('response.length', response.length)
+
+    return item
 };
 
 const failToGetLyric = () => {
     let lyricUl = e(".class-ul-lyric")
     lyricUl.innerHTML = "<li>本歌曲展示没有歌词</li>"
 };
-const getLyric = (id) => {
+
+//获取歌词
+const getLyric = (sid) => {
     let newRequest = {
-        method: "POST",
-        url: `https://autumnfish.cn/lyric?id=${id}`,
+        method: "GET",
+        url: `https://autumnfish.cn/lyric?id=${sid}`,
         callback: (response) => {
             if (response !== "error") {
+                // log('getLyric', response.lrc.lyric)
                 setLyric(response)
                 return
             }
@@ -82,49 +73,34 @@ const getLyric = (id) => {
     }
     ajax(newRequest)
 };
-//设置歌曲的URL
 const setMusicPlayer = (song) => {
-    //log('setMusicPlayer',song)
-    let url = song[0].url
-    //log('url', url)
-    let audioPlayer = e("audio")
-    // let musicName = e(".class-p-musicName")
-    // let musicAuthor = e(".class-p-author")
-    // let musicDiv = e(".class-div-picture")
-    audioPlayer.src = url
-    // musicName.innerHTML = song.title
-    // musicAuthor.innerHTML = song.artist
-    // musicDiv.style.backgroundImage = `url(${song.picture})`
-    musicPlayEvent(audioPlayer)
-    getLyric(song[0].id)
-};
-//设置歌曲的信息
-const setMusicPlayerMes = (item) => {
-    //log('setMusicPlayerMes',item)
+    // log('setMusicPlayer', song.name, song.id)
+    let url = `//music.163.com/song/media/outer/url?id=${song.id}.mp3`
     let audioPlayer = e("audio")
     let musicName = e(".class-p-musicName")
     let musicAuthor = e(".class-p-author")
     let musicDiv = e(".class-div-picture")
-    musicName.innerHTML = item.name
-    musicAuthor.innerHTML = item.song.artists[0].name
-    musicDiv.style.backgroundImage = `url(${item.picUrl})`
-    //getLyric(song.sid)
+    audioPlayer.src = url
+    musicName.innerHTML = song.name
+    musicAuthor.innerHTML = song.ar[0].name
+    musicDiv.style.backgroundImage = `url(${song.al.picUrl})`
+    musicPlayEvent(audioPlayer)
+    getLyric(song.id)
 };
 
 const setLyric = (response) => {
     removeAllChild(".class-ul-lyric")
     let line = response.lrc.lyric.split("\n")
-    //log('setLyric', line)
+    // log('line', line)
     let result = handleLyric(line)
-    log('result222222', result)
     renderLyric(result)
 
 };
 
-
+//把歌词插入到页面中
 const renderLyric = (result) => {
     let lyrLi = ""
-    for (let i = 0; i < result.length; i++) {
+    for (let i = 1; i < result.length; i++) {
         let item = result[i]
         lyrLi += `<li data-time=${item[0]}>${item[1]}</li>`
     }
@@ -179,17 +155,17 @@ const autoChangeLyr = () => {
 const getChannelIdFromDataSet = () => {
     let musicInfoDiv = e(".class-div-musicInfo")
     let id = musicInfoDiv.dataset.channelId
+    log('getChannelIdFromDataSet', id)
     return id
 };
 
 const requestMusic = (channelId) => {
     let musicRequest = {
-        url: `https://autumnfish.cn/song/url?id=${channelId}`,
+        url: `https://autumnfish.cn/song/detail?ids=${channelId}`,
         method: "GET",
         callback: (response) => {
-            //log('33333333', response)
-            let song = response.data
-            log('song', song)
+            log('requestMusic', response.songs)
+            let song = response.songs[0]
             setMusicPlayer(song)
         }
     }
@@ -198,16 +174,16 @@ const requestMusic = (channelId) => {
 
 const getMusicSource = () => {
     let channelRequest = {
-        url: `https://autumnfish.cn/personalized/newsong`,
+        url: "https://autumnfish.cn/playlist/detail?id=5184728560",
         method: "GET",
         callback: (response) => {
-            //log('getMusicSource', response)
-            let singleChannel = getRandomChannel(response)
-            //log('singleChannel', singleChannel)
-            // let musicInfoDiv = e(".class-div-musicInfo")
-            // musicInfoDiv.dataset.channelId = singleChannel.id
-            next(response)
-            requestMusic(singleChannel.id)
+            let a = response.playlist.trackIds
+            let singleChannel = getRandomChannel(a)
+            log('getMusicSource', singleChannel)
+            let musicInfoDiv = e(".class-div-musicInfo")
+            musicInfoDiv.dataset.channelId = singleChannel
+            requestMusic(singleChannel)
+            log('getMusicSource', response)
         }
     }
     ajax(channelRequest)
@@ -255,7 +231,9 @@ const bindPlayerEndEvent = () => {
 const bindNextSongEvent = () => {
     let nextSongButton = e(".class-span-next")
     bindEvent(nextSongButton, "click", function (event) {
+        getMusicSource()
         let id = getChannelIdFromDataSet()
+        setMusicPlayer()
         requestMusic(id)
     })
 };
@@ -286,6 +264,7 @@ const switchSoundIcon = (element) => {
     element.dataset.state = "open"
 };
 
+//音量控制
 const bindSoundButtonEvent = () => {
     let soundButton = e(".class-span-sound")
     bindEvent(soundButton, "click", function (event) {
@@ -311,6 +290,7 @@ const bindSoundBarEvent = () => {
     })
 };
 
+//歌曲循环
 const changeLoopButtonState = (loopButton) => {
     let state = loopButton.dataset.state
     if (state === "close") {
@@ -341,10 +321,11 @@ const bindSoundEvents = () => {
     bindSoundBarEvent()
 };
 
+//时间进度
 const autoChangeCurrentTime = (self, currentSelector, durationSelector) => {
     let durationTime = self.duration
     durationSelector.innerHTML = transFloatToTime(durationTime)
-    let currentTimeId = setInterval(function() {
+    let currentTimeId = setInterval(function () {
         let currentTime = transFloatToTime(self.currentTime)
         currentSelector.innerHTML = currentTime
     }, 1000)
